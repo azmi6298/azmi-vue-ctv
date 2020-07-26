@@ -8,8 +8,13 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "p-debounce": "^2.1.0",
+    "tailwindcss": "^1.5.2",
+    "vue": "^2.6.11",
+    "vue-simple-spinner": "^1.2.10",
+    "vue-youtube": "^1.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
