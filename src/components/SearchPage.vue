@@ -29,7 +29,7 @@
 
   <!-- Search Result -->
   <section class="text-gray-700 body-font" v-if="result != null && result.total > 0 && !loading">
-    <div class="container px-5 py-24 mx-auto flex flex-wrap">
+    <div class="container px-5 py-24 mx-auto flex flex-col lg:flex-row">
       <div class="flex flex-wrap -mx-4 mt-auto mb-auto lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
         <div class="w-full sm:p-4 px-4 mb-6">
           <h1 class="title-font font-medium text-xl mb-2 text-gray-900">Searched Keyword</h1>
@@ -48,10 +48,12 @@
         <iframe width="560" height="315" :src="embed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
-    <div class="flex flex-col font-semibold" v-for="(searchResult, index) in result.data" :key="index">
-      <div v-if="index%2 == 0" class="w-full p-4 mb-4 bg-gray-500" v-html="searchResult.text"></div>
-      <div v-else class="w-full p-4 mb-4 bg-gray-400" v-html="searchResult.text"></div>
-    </div>
+    <sequential-entrance delay="500">
+      <div class="flex flex-col font-semibold" v-for="(searchResult, index) in result.data" :key="index">
+        <div v-if="index%2 == 0" class="w-full p-4 mb-4 bg-gray-500" v-html="searchResult.text"></div>
+        <div v-else class="w-full p-4 mb-4 bg-gray-400" v-html="searchResult.text"></div>
+      </div>
+    </sequential-entrance>
   </section>
 </div>
 </template>
