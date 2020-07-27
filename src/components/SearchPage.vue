@@ -39,19 +39,19 @@
           <h2 class="title-font font-medium text-3xl text-gray-900">{{ result.total }}</h2>
           <p class="leading-relaxed">Matched Search</p>
         </div>
-        <div class="p-4 w-1/2">
+        <!-- <div class="p-4 w-1/2">
           <h2 class="title-font font-medium text-3xl text-gray-900">{{ totalPage }}</h2>
           <p class="leading-relaxed">Total Result Page</p>
-        </div>
+        </div> -->
       </div>
       <div class="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
         <iframe width="560" height="315" :src="embed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
     <sequential-entrance delay="500">
-      <div class="flex flex-col font-semibold" v-for="(searchResult, index) in result.data" :key="index">
-        <div v-if="index%2 == 0" class="w-full p-4 mb-4 bg-gray-500" v-html="searchResult.text"></div>
-        <div v-else class="w-full p-4 mb-4 bg-gray-400" v-html="searchResult.text"></div>
+      <div class="flex flex-col font-semibold text-gray-100" v-for="(searchResult, index) in result.data" :key="index">
+        <div v-if="index%2 == 0" class="w-full p-4 mb-4 bg-red-500 rounded-lg" v-html="searchResult.text"></div>
+        <div v-else class="w-full p-4 mb-4 bg-red-400 rounded-lg" v-html="searchResult.text"></div>
       </div>
     </sequential-entrance>
   </section>
