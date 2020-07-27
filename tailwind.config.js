@@ -1,8 +1,14 @@
 module.exports = {
-  purge: [
+  purge: {
+    content: [
     './src/**/*.html',
-    './src/components/*.vue',
-  ],
+    './src/**/*.vue',
+    ],
+    options: {
+      whitelistPatterns: [/entranceFromTop$/, /entranceFromRight$/, /entranceFromBottom$/, /entranceFromLeft$/],
+    },
+    keyframes: true 
+  },
   theme: {
     extend: {},
   },

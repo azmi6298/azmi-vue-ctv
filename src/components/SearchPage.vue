@@ -1,12 +1,12 @@
 <template>
 <div class="container mx-auto">
   <!-- Input Field -->
-  <div class="p-8 flex flex-col items-center justify-center space-y-10">
+  <div class="p-8 flex flex-col items-center justify-center">
     <div class="text-sm md:text-xl font-semibold text-center text-gray-600">Insert Your Youtube URL and Specific Keyword</div>
-    <div class="bg-white flex w-6/12 items-center rounded-full shadow-xl">
+    <div class="bg-white flex w-6/12 items-center rounded-full shadow-xl mt-10">
       <input v-model="url" class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Youtube URL ...">
     </div>
-    <div class="bg-white flex w-6/12 items-center rounded-full shadow-xl">
+    <div class="bg-white flex w-6/12 items-center rounded-full shadow-xl mt-10">
       <input v-model="keyword" class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Specific Keyword ...">
     </div>
     <!-- <div class="p-4">
@@ -14,7 +14,7 @@
         <i class="fa fa-search" aria-hidden="true"></i>
       </button>
     </div> -->
-    <div v-if="result != null && result.total == 0" class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-red-500">
+    <div v-if="result != null && result.total == 0" class="text-white px-6 py-4 border-0 rounded relative mb-4 mt-10 bg-red-500">
       <span class="text-xl inline-block mr-5 align-middle">
         <i class="fa fa-exclamation" />
       </span>
@@ -44,7 +44,7 @@
           <p class="leading-relaxed">Total Result Page</p>
         </div> -->
       </div>
-      <div class="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
+      <div class="w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
         <iframe width="560" height="315" :src="embed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
@@ -99,8 +99,6 @@ export default {
       if (data.total > 0) {
         this.videoId = getIdFromUrl(this.url)
       }
-
-      console.log(data)
       this.result = data
       this.totalPage = data.total%10
       this.loading = false
