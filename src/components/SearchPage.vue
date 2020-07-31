@@ -9,11 +9,6 @@
     <div class="bg-white flex w-6/12 items-center rounded-full shadow-xl mt-10">
       <input v-model="keyword" class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Specific Keyword ...">
     </div>
-    <!-- <div class="p-4">
-      <button @click="getVideoData" class="bg-red-500 text-white rounded-full p-2 hover:bg-red-400 focus:outline-none w-12 h-12 flex items-center justify-center">
-        <i class="fa fa-search" aria-hidden="true"></i>
-      </button>
-    </div> -->
     <div v-if="result != null && result.total == 0" class="text-white px-6 py-4 border-0 rounded relative mb-4 mt-10 bg-red-500">
       <span class="text-xl inline-block mr-5 align-middle">
         <i class="fa fa-exclamation" />
@@ -28,21 +23,21 @@
   <Spinner v-if="loading" class="mt-16" size="huge" line-fg-color="#FC8181"/>
 
   <!-- Search Result -->
-  <section class="text-gray-700 body-font" v-if="result != null && result.total > 0 && !loading">
+  <section v-if="result != null && result.total > 0 && !loading">
     <div class="container px-5 py-24 mx-auto flex flex-col lg:flex-row">
-      <div class="flex flex-wrap -mx-4 mt-auto mb-auto lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
+      <div class="flex flex-wrap -mx-4 mt-auto mb-auto w-full sm:w-2/3 content-start sm:pr-10">
         <div class="w-full sm:p-4 px-4 mb-6">
-          <h1 class="title-font font-medium text-xl mb-2 text-gray-900">Searched Keyword</h1>
-          <div class="leading-relaxed">{{ keyword }}</div>
+          <h1 class="title-font font-medium text-xl mb-2 text-gray-700">Searched Keyword</h1>
+          <div class="text-4xl leading-relaxed text-gray-900 font-semibold">{{ keyword }}</div>
         </div>
-        <div class="p-4 w-1/2">
-          <h2 class="title-font font-medium text-3xl text-gray-900">{{ result.total }}</h2>
+        <div class="p-4">
+          <h2 class="title-font font-semibold text-3xl text-gray-900">{{ result.total }}</h2>
           <p class="leading-relaxed">Matched Search</p>
         </div>
-        <!-- <div class="p-4 w-1/2">
-          <h2 class="title-font font-medium text-3xl text-gray-900">{{ totalPage }}</h2>
+        <div class="p-4">
+          <h2 class="title-font font-semibold text-3xl text-gray-900">{{ totalPage }}</h2>
           <p class="leading-relaxed">Total Result Page</p>
-        </div> -->
+        </div>
       </div>
       <div class="w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
         <iframe width="560" height="315" :src="embed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -54,6 +49,27 @@
         <div v-else class="w-full p-4 mb-4 bg-red-400 rounded-lg" v-html="searchResult.text"></div>
       </div>
     </sequential-entrance>
+    <div class="flex justify-between items-center">
+      <div>
+        <button @click="getFirstPage" class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3  rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+          <i class="fa fa-angle-double-left"></i>
+        </button>
+        <button @click="getPrevPage" class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3  rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+          <i class="fa fa-angle-left"></i>
+        </button>
+      </div>
+      <div>
+        <span class="font-bold">{{ currentPage }} / {{ totalPage }}</span>
+      </div>
+      <div>
+        <button @click="getNextPage" class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3  rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+          <i class="fa fa-angle-right"></i>
+        </button>
+        <button @click="getLastPage" class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3  rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+          <i class="fa fa-angle-double-right"></i>
+        </button>
+      </div>
+    </div>
   </section>
 </div>
 </template>
@@ -72,6 +88,11 @@ export default {
       keyword: '',
       videoId: '',
       totalPage: '',
+      currentPage: 1,
+      firstPage: '',
+      lastPage: '',
+      prevPage: '',
+      nextPage: '',
       result: null,
       loading: false
     }
@@ -81,7 +102,7 @@ export default {
   },
   watch: {
     keyword: pDebounce(async function handleKeyword() {
-      if (this.url && this.keyword.length >=3) {
+      if(this.url && this.keyword.length >=3) {
         await this.getVideoData()
       }
     }, 250)
@@ -92,16 +113,49 @@ export default {
     }
   },
   methods: {
-    async getVideoData () {
+    async getVideoData() {
       this.loading = true
       const { data } = await axios.post(`https://cari-teks-video-api.vercel.app/api/search?url=${this.url}&q=${this.keyword}`)
 
-      if (data.total > 0) {
+      if(data.total > 0) {
         this.videoId = getIdFromUrl(this.url)
       }
       this.result = data
-      this.totalPage = data.total%10
+      this.firstPage = data.first
+      this.lastPage = data.last
+      this.nextPage = data.next
+      this.prevPage = data.prev
+      this.totalPage = Math.round(data.total/10)
       this.loading = false
+      console.log(data)
+    },
+    async getNextPage() {
+      const { data } = await axios.post(this.nextPage)
+      this.result = data
+      this.nextPage = data.next
+      this.prevPage = data.prev
+      this.currentPage += 1
+    },
+    async getPrevPage() {
+      const { data } = await axios.post(this.prevPage)
+      this.result = data
+      this.nextPage = data.next
+      this.prevPage = data.prev
+      this.currentPage -= 1
+    },
+    async getFirstPage() {
+      const { data } = await axios.post(this.firstPage)
+      this.result = data
+      this.nextPage = data.next
+      this.prevPage = data.prev
+      this.currentPage = 1
+    },
+    async getLastPage() {
+      const { data } = await axios.post(this.lastPage)
+      this.result = data
+      this.nextPage = data.next
+      this.prevPage = data.prev
+      this.currentPage = this.totalPage
     }
   }
 }

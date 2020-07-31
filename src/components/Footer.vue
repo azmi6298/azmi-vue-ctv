@@ -6,7 +6,7 @@
           Made with ❤️ by
           <a
             href="https://github.com/azmi6298"
-            class="text-gray-600 hover:text-red-500 font-semibold"
+            class="text-gray-600 font-semibold"
             >azmi6298</a
           >
         </div>

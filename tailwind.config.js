@@ -1,11 +1,11 @@
 module.exports = {
   purge: {
     content: [
-    './src/**/*.html',
+    './public/**/*.html',
     './src/**/*.vue',
     ],
     options: {
-      whitelistPatterns: [/entranceFromTop$/, /entranceFromRight$/, /entranceFromBottom$/, /entranceFromLeft$/],
+      whitelistPatterns: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/,/^router-link(|-exact)-active$/,/entranceFromTop$/, /entranceFromRight$/, /entranceFromBottom$/, /entranceFromLeft$/],
     },
     keyframes: true 
   },
