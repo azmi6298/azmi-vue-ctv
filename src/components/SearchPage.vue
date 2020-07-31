@@ -1,12 +1,18 @@
 <template>
 <div class="container mx-auto">
+  <div class="text-center mb-20">
+    <h1 class="text-3xl font-semibold title-font text-gray-900 mb-4">What is <span class="text-red-500">Cari Teks Video</span> ?</h1>
+    <p class="text-base capitalize leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Cari Teks Video can search any keyword within your favorite Youtube video.</p>
+    <div class="flex mt-6 justify-center">
+      <div class="w-16 h-1 rounded-full bg-indigo-500 inline-flex"></div>
+    </div>
+  </div>
   <!-- Input Field -->
   <div class="p-8 flex flex-col items-center justify-center">
-    <div class="text-sm md:text-xl font-semibold text-center text-gray-600">Insert Your Youtube URL and Specific Keyword</div>
-    <div class="bg-white flex w-6/12 items-center rounded-full shadow-xl mt-10">
+    <div class="bg-white flex w1/2 lg:w-6/12 items-center rounded-full shadow-xl mt-10">
       <input v-model="url" class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Youtube URL ...">
     </div>
-    <div class="bg-white flex w-6/12 items-center rounded-full shadow-xl mt-10">
+    <div class="bg-white flex w1/2 lg:w-6/12 items-center rounded-full shadow-xl mt-10">
       <input v-model="keyword" class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Specific Keyword ...">
     </div>
     <div v-if="result != null && result.total == 0" class="text-white px-6 py-4 border-0 rounded relative mb-4 mt-10 bg-red-500">
