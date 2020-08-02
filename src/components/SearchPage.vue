@@ -1,7 +1,7 @@
 <template>
 <div class="container mx-auto">
   <div class="text-center mb-20">
-    <h1 class="text-3xl font-semibold title-font text-gray-900 mb-4">What is <span class="text-red-500">Cari Teks Video</span> ?</h1>
+    <h1 class="text-3xl font-semibold title-font text-gray-900 mb-4">What Can <span class="text-red-500">Cari Teks Video</span> Do?</h1>
     <p class="text-base capitalize leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Cari Teks Video can search any keyword within your favorite Youtube video.</p>
     <div class="flex mt-6 justify-center">
       <div class="w-16 h-1 rounded-full bg-indigo-500 inline-flex"></div>
