@@ -1,7 +1,7 @@
 <template>
   <footer class="mt-12">
     <div class="container mx-auto border-t border-gray-500">
-      <div class="w-full md:w-4/12 p-4 mx-auto text-center m-8">
+      <div class="w-full p-4 mx-auto text-center m-8">
         <div class="text-sm text-gray-600">
           Made with ❤️ by
           <a

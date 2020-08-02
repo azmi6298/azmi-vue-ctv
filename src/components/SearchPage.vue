@@ -1,6 +1,6 @@
 <template>
 <div class="container mx-auto">
-  <div class="text-center mb-20">
+  <div class="text-center mb-20 mt-10 px-5">
     <h1 class="text-3xl font-semibold title-font text-gray-900 mb-4">What Can <span class="text-red-500">Cari Teks Video</span> Do?</h1>
     <p class="text-base capitalize leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Cari Teks Video can search any keyword within your favorite Youtube video.</p>
     <div class="flex mt-6 justify-center">
@@ -10,10 +10,10 @@
   <!-- Input Field -->
   <div class="p-8 flex flex-col items-center justify-center">
     <div class="bg-white flex w1/2 lg:w-6/12 items-center rounded-full shadow-xl mt-10">
-      <input v-model="url" class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Youtube URL ...">
+      <input v-model="url" class="rounded-l-full w-full px-6 py-4 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Youtube URL ...">
     </div>
     <div class="bg-white flex w1/2 lg:w-6/12 items-center rounded-full shadow-xl mt-10">
-      <input v-model="keyword" class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Specific Keyword ...">
+      <input v-model="keyword" class="rounded-l-full w-full px-6 py-4 text-gray-700 leading-tight focus:outline-none" type="text" placeholder="Specific Keyword ...">
     </div>
     <div v-if="result != null && result.total == 0" class="text-white px-6 py-4 border-0 rounded relative mb-4 mt-10 bg-red-500">
       <span class="text-xl inline-block mr-5 align-middle">
@@ -30,7 +30,7 @@
 
   <!-- Search Result -->
   <section v-if="result != null && result.total > 0 && !loading">
-    <div class="container px-5 py-24 mx-auto flex flex-col lg:flex-row">
+    <div class="container px-5 py-24 mx-auto flex flex-col lg:flex-row items-center">
       <div class="flex flex-wrap -mx-4 mt-auto mb-auto w-full sm:w-2/3 content-start sm:pr-10">
         <div class="w-full sm:p-4 px-4 mb-6">
           <h1 class="title-font font-medium text-xl mb-2 text-gray-700">Searched Keyword</h1>
@@ -46,16 +46,26 @@
         </div>
       </div>
       <div class="w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
-        <iframe width="560" height="315" :src="embed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="560" height="315" :src="embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
     <sequential-entrance delay="500">
-      <div class="flex flex-col font-semibold text-gray-100" v-for="(searchResult, index) in result.data" :key="index">
-        <div v-if="index%2 == 0" class="w-full p-4 mb-4 bg-red-500 rounded-lg" v-html="searchResult.text"></div>
-        <div v-else class="w-full p-4 mb-4 bg-red-400 rounded-lg" v-html="searchResult.text"></div>
+      <div class="flex flex-col font-semibold text-gray-100 px-4 md:px-0" v-for="(searchResult, index) in result.data" :key="index">
+        <div v-if="index%2 == 0" class="w-full p-4 mb-4 bg-red-500 rounded-lg flex flex-row justify-between items-center" >
+          <div v-html="searchResult.text" class="p-3"></div>
+          <button @click="playVideo(searchResult.start, searchResult.end)">
+            <i class="fa fa-play-circle fa-2x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div v-else class="w-full p-4 mb-4 bg-red-400 rounded-lg flex flex-row justify-between items-center" >
+          <div v-html="searchResult.text" class="p-3"></div>
+          <button @click="playVideo(searchResult.start, searchResult.end)">
+            <i class="fa fa-play-circle fa-2x" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </sequential-entrance>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center px-4 md:px-0">
       <div>
         <button @click="getFirstPage" class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3  rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
           <i class="fa fa-angle-double-left"></i>
@@ -65,7 +75,7 @@
         </button>
       </div>
       <div>
-        <span class="font-bold">{{ currentPage }} / {{ totalPage }}</span>
+        <span class="font-bold text-gray-600">{{ currentPage }} / {{ totalPage }}</span>
       </div>
       <div>
         <button @click="getNextPage" class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3  rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
@@ -93,12 +103,13 @@ export default {
       url: '',
       keyword: '',
       videoId: '',
-      totalPage: '',
+      totalPage: 0,
       currentPage: 1,
       firstPage: '',
       lastPage: '',
       prevPage: '',
       nextPage: '',
+      embedUrl: '',
       result: null,
       loading: false
     }
@@ -110,13 +121,10 @@ export default {
     keyword: pDebounce(async function handleKeyword() {
       if(this.url && this.keyword.length >=3) {
         await this.getVideoData()
+      } else {
+        this.clearData()
       }
-    }, 250)
-  },
-  computed: {
-    embed() {
-      return `https://www.youtube.com/embed/${this.videoId}`
-    }
+    }, 500)
   },
   methods: {
     async getVideoData() {
@@ -131,9 +139,9 @@ export default {
       this.lastPage = data.last
       this.nextPage = data.next
       this.prevPage = data.prev
-      this.totalPage = Math.round(data.total/10)
+      this.totalPage = Math.ceil(data.total/10)
+      this.embedUrl = `https://www.youtube.com/embed/${this.videoId}`
       this.loading = false
-      console.log(data)
     },
     async getNextPage() {
       const { data } = await axios.post(this.nextPage)
@@ -162,6 +170,22 @@ export default {
       this.nextPage = data.next
       this.prevPage = data.prev
       this.currentPage = this.totalPage
+    },
+    async clearData() {
+      this.url = '',
+      this.keyword = '',
+      this.videoId = '',
+      this.totalPage = 0,
+      this.currentPage = 1,
+      this.firstPage = '',
+      this.lastPage = '',
+      this.prevPage = '',
+      this.nextPage = '',
+      this.result = null,
+      this.loading = false
+    },
+    playVideo(start, end) {
+      this.embedUrl = `https://www.youtube.com/embed/${this.videoId}?start=${start-3}&end=${end}&autoplay=1&cc_load_policy=1`
     }
   }
 }
